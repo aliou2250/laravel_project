@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TaskRequest extends FormRequest
@@ -27,7 +27,7 @@ class TaskRequest extends FormRequest
             //
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'due_date' => 'required|date',
+            'due_date' => 'required',
             'status' => 'required|string',
             'user_id' => 'required|exists:users,id',
             'assignee_id' => 'required|exists:users,id',

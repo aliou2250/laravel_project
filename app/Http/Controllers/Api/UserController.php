@@ -9,7 +9,6 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -43,6 +42,7 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
             $user->role_id = $request->role_id;
             $user->save();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User created successfully.',
@@ -86,6 +86,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->role_id = $request->role_id;
             $user->update();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User updated successfully.',
@@ -109,6 +110,7 @@ class UserController extends Controller
         //
         try {
             $user->delete();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User deleted successfully.',
@@ -123,22 +125,24 @@ class UserController extends Controller
         }
     }
 
-    public function login(LoginRequest $request) {
+    public function login(LoginRequest $request)
+    {
         try {
             $user = User::where('email', $request->email)->first();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'User not found.',
                 ], 404);
             }
-            if (!auth()->attempt($request->only('email', 'password'))) {
+            if (! auth()->attempt($request->only('email', 'password'))) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Invalid login credentials.',
                 ], 401);
             }
             $token = $user->createToken('auth_token')->plainTextToken;
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User logged in successfully.',

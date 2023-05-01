@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\TaskAssigned;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Attachment;
 use App\Models\Task;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +40,7 @@ class TaskController extends Controller
         //
         try {
             $task = Task::create($request->validated());
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Task created successfully.',
@@ -48,6 +51,31 @@ class TaskController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Task creation failed.',
+                'errors' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Assign a task to a user.
+     */
+    public function assignTaskToUser(Task $task, User $user)
+    {
+        try {
+            $task->assignee_id = $user->id;
+            $task->save();
+
+            event(new TaskAssigned($task, $user));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Task assigned successfully.',
+                'task' => new TaskResource($task),
+            ], 200);
+        } catch (Exception $e) {
+            //throw $e;
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task assigned failed.',
                 'errors' => $e->getMessage(),
             ], 500);
         }
@@ -77,13 +105,8 @@ class TaskController extends Controller
     {
         //
         try {
-            if (auth()->user()->id !== $task->user_id) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'You are not authorized to update this task.',
-                ], 403);
-            }
             $task->update($request->validated());
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Task updated successfully.',
@@ -106,13 +129,8 @@ class TaskController extends Controller
     {
         //
         try {
-            if (auth()->user()->id !== $task->user_id) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'You are not authorized to delete this task.',
-                ], 403);
-            }
             $task->delete();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Task deleted successfully.',
@@ -132,27 +150,24 @@ class TaskController extends Controller
     {
         //
         $request->validate([
-            'attachments' => 'required|array',
-            'attachments.*' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,ppt,pptx',
+            'file' => 'required|file|max:10240', // 10MB max size
         ]);
-        try {
-            $files = $request->file('attachments');
-            foreach ($files as $file) {
-                $filename = $file->getClientOriginalName();
-                $path = Storage::putFile('attachments', $file);
 
-                Attachment::create([
-                    'filename' => $filename,
-                    'path' => $path,
-                    'task_id' => $task->id,
-                ]);
-            }
+        try {
+            $file = $request->file('file');
+            $path = Storage::putFile('public/attachments/', $file);
+            $attachment = Attachment::create([
+                'task_id' => $task->id,
+                'filename' => $file->getClientOriginalName(),
+                'path' => $path,
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'File attached successfully.',
-            ], 201);
+                'attachment' => $attachment,
+            ], 200);
         } catch (Exception $e) {
-            //throw $th;
             return response()->json([
                 'status' => 'error',
                 'message' => 'File attachment failed.',

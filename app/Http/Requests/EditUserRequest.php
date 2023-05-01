@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EditUserRequest extends FormRequest
@@ -26,7 +26,7 @@ class EditUserRequest extends FormRequest
         return [
             //
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $this->user->id,
+            'email' => 'required|email|unique:users,email,'.$this->user->id,
             'role_id' => 'required|exists:roles,id',
         ];
     }
