@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'in progress', 'completed']);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('assignee_id');
+            $table->unsignedBigInteger('assignee_id')->nullable();
             $table->foreign('assignee_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

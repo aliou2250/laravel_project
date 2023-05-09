@@ -24,7 +24,6 @@ class TaskFactory extends Factory
             'due_date' => $this->faker->dateTimeBetween('now', '+1 year'),
             'status' => $this->faker->randomElement(['pending', 'in progress', 'completed']),
             'user_id' => User::factory(),
-            'assignee_id' => User::factory(),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
