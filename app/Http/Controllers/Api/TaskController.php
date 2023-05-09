@@ -66,6 +66,7 @@ class TaskController extends Controller
             $task->save();
 
             event(new TaskAssigned($task, $user));
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Task assigned successfully.',
