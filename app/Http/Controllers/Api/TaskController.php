@@ -122,7 +122,7 @@ class TaskController extends Controller
             return response()->json([
 
 
-                
+
                 'status' => 'error',
                 'message' => 'Task update failed.',
                 'errors' => $e->getMessage(),
