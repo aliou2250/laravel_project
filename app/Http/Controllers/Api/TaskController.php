@@ -120,6 +120,9 @@ class TaskController extends Controller
         } catch (Exception $e) {
             //throw $e;
             return response()->json([
+
+
+                
                 'status' => 'error',
                 'message' => 'Task update failed.',
                 'errors' => $e->getMessage(),
