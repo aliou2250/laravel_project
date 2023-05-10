@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
@@ -26,7 +28,7 @@ class EditUserRequest extends FormRequest
         return [
             //
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$this->user->id,
+            'email' => 'required|email|unique:users,email,' . $this->user->id,
             'role_id' => 'required|exists:roles,id',
         ];
     }

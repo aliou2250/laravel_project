@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\api\RoleController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\api\UserController;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Events\TaskAssigned;
@@ -109,7 +111,7 @@ class TaskController extends Controller
             $task->update($request->validated());
 
 
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Task updated successfully.',

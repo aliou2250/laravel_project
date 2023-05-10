@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit;
 
 use App\Models\Task;
@@ -11,8 +13,8 @@ class TaskTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function a_task_belongs_to_an_owner()
+
+    public function testATaskBelongsToAnOwner()
     {
         $user = User::factory()->create();
         $task = Task::factory()->create(['user_id' => $user->id]);
@@ -21,8 +23,8 @@ class TaskTest extends TestCase
         $this->assertEquals($user->id, $task->owner->id);
     }
 
-    /** @test */
-    public function a_task_belongs_to_an_assignee()
+
+    public function testATaskBelongsToAnAssignee()
     {
         $user = User::factory()->create();
         $task = Task::factory()->create(['assignee_id' => $user->id]);

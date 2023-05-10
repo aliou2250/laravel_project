@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Models\Task;
@@ -10,7 +12,8 @@ use Tests\TestCase;
 
 class TaskApiTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * A basic feature test example.
@@ -62,7 +65,7 @@ class TaskApiTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->putJson('/api/tasks/'.$task->id, [
+            ->putJson('/api/tasks/' . $task->id, [
                 'title' => 'Updated title',
                 'description' => 'Updated description',
                 'assignee_id' => $user->id,
@@ -91,7 +94,7 @@ class TaskApiTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->deleteJson('/api/tasks/'.$task->id);
+            ->deleteJson('/api/tasks/' . $task->id);
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
