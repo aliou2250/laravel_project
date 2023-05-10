@@ -108,6 +108,8 @@ class TaskController extends Controller
         try {
             $task->update($request->validated());
 
+
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Task updated successfully.',
